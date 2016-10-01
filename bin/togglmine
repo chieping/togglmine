@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+
+require 'builder'
+require 'yaml'
+require 'json'
+require 'uri'
+require 'open-uri'
+require 'time'
+
+config = YAML.load_file("#{ENV["HOME"]}/.togglmine.yaml")
+
+def build_xml(opt)
+  xml = Builder::XmlMarkup.new(indent: 2)
+  xml.instruct! :xml, encoding: "UTF-8"
+  xml.time_entry do |time_entry|
+    opt.each { |k, v| time_entry.tag!(k, v) }
+  end
+end
+
+def resolve_tag_value_to_activity_id(tags, mapping)
+  activity = tags.map { |tag| mapping[tag] }
+      .reject(&:nil?)
+      .first
+  activity && activity['id']
+end
+
+def convert_msec_to_hour(msec)
+  (msec.to_f / 1000 / 60 / 60).round(2)
+end
+
+# main
+target_date = ARGV[0] || Date.today.strftime('%Y-%m-%d')
+unless target_date =~ /\A\d{4}-\d{2}-\d{2}\z/
+  raise "Target date must meet a format: YYYY-MM-DD but: #{target_date}"
+end
+
+toggl_url = URI.parse 'https://toggl.com/reports/api/v2/details'
+toggl_url.query = URI.encode_www_form(
+  user_agent: config['toggl']['user_agent'],
+  workspace_id: config['toggl']['workspace_id'],
+  since: target_date,
+  until: target_date
+)
+toggl_data = open(toggl_url, http_basic_authentication: [config['toggl']['apikey'], 'api_token'])
+toggl_data_as_json = JSON.parse(toggl_data.read)
+
+toggl_data_as_json['data'].each do |toggl_entry|
+  opt = {
+    issue_id: toggl_entry['description'][/\d+/] || config['default_issue_id'],
+    activity_id: resolve_tag_value_to_activity_id(toggl_entry['tags'], config['tag_mapping']) || config['default_activity_id'],
+    spent_on: target_date,
+    hours: convert_msec_to_hour(toggl_entry['dur']),
+    comments: toggl_entry['description'][/\|(.*)\z/, 1] || ""
+  }
+  insecure_opt = "--insecure" if config['redmine']['insecure']
+
+  puts "## #{toggl_entry['description']}"
+  puts %W( curl -vX POST #{insecure_opt} -H 'Content-Type: application/xml'
+    -H 'X-Redmine-API-Key: #{config['redmine']['authentication']['apikey']}'
+    #{URI.join(config['redmine']['url'], '/time_entries.xml')} --data ').join(' ')
+  puts build_xml(opt) + "'"
+end
