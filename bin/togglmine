@@ -7,7 +7,7 @@ require 'uri'
 require 'open-uri'
 require 'time'
 
-config = YAML.load_file("#{ENV["HOME"]}/.togglmine.yaml")
+config = YAML.load_file("#{ENV['HOME']}/.togglmine.yaml")
 
 def build_xml(opt)
   xml = Builder::XmlMarkup.new(indent: 2)
@@ -19,8 +19,8 @@ end
 
 def resolve_tag_value_to_activity_id(tags, mapping)
   activity = tags.map { |tag| mapping[tag] }
-      .reject(&:nil?)
-      .first
+                 .reject(&:nil?)
+                 .first
   activity && activity['id']
 end
 
@@ -55,7 +55,7 @@ toggl_data_as_json['data'].each do |toggl_entry|
   insecure_opt = "--insecure" if config['redmine']['insecure']
 
   puts "## #{toggl_entry['description']}"
-  puts %W( curl -vX POST #{insecure_opt} -H 'Content-Type: application/xml'
+  puts %W(curl -vX POST #{insecure_opt} -H 'Content-Type: application/xml'
     -H 'X-Redmine-API-Key: #{config['redmine']['authentication']['apikey']}'
     #{URI.join(config['redmine']['url'], '/time_entries.xml')} --data ').join(' ')
   puts build_xml(opt) + "'"
