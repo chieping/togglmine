@@ -90,7 +90,7 @@ $ togglmine 2016-10-01
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/togglmine.
+Bug reports and pull requests are welcome on GitHub at https://github.com/chieping/togglmine.
 
 
 ## License
