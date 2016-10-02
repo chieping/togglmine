@@ -2,9 +2,9 @@
 
 This simple tool helps your daily inputs from [Toggl](https://toggl.com) to
 Redmine time\_entry, searching for your working data stored in Toggl and
-printing curl commands to store the data to Redmine.  You should review printed
-commands and execute it.  You no longer have to input manually by Web browser.
-
+printing _curl_ commands in order to store the data on Redmine.  You should
+review printed commands and run it.  You no longer have to input manually by
+Web browser.
 
 ## Installation
 
@@ -86,6 +86,35 @@ You can do with specific date like this:
 $ togglmine 2016-10-01
 ## sample task
 ...
+```
+
+Tip: Open by editor directly (zsh only?):
+
+```
+$ vim =(togglmine)
+```
+
+Tip: Auto detecting into _comments_:
+
+Input some comment after `|`.
+
+![toggl comment example](https://raw.githubusercontent.com/chieping/togglmine/master/asset/toggl_comment.png)
+
+Then,
+
+```
+$ togglmine
+## タスク #9772 Task name | blur blur
+curl -vX POST  -H 'Content-Type: application/xml' -H 'X-Redmine-API-Key: 1234567890abcdef1234567890abcdef12345678' https://example.com/time_entries.xml --data '
+<?xml version="1.0" encoding="UTF-8"?>
+<time_entry>
+  <issue_id>9772</issue_id>
+  <activity_id>8</activity_id>
+  <spent_on>2016-10-02</spent_on>
+  <hours>0.3</hours>
+  <comments>blur blur</comments>
+</time_entry>
+'
 ```
 
 ## Contributing
