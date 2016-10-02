@@ -16,7 +16,7 @@ gem install togglmine
 
 ~/.togglmine.yaml
 
-```
+```yaml
 ---
 toggl:
   # apikey(required)
