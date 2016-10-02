@@ -50,7 +50,7 @@ toggl_data_as_json['data'].each do |toggl_entry|
     activity_id: resolve_tag_value_to_activity_id(toggl_entry['tags'], config['tag_mapping']) || config['default_activity_id'],
     spent_on: target_date,
     hours: convert_msec_to_hour(toggl_entry['dur']),
-    comments: toggl_entry['description'][/\|(.*)\z/, 1] || ""
+    comments: toggl_entry['description'][/\|\s*(.*)\z/, 1] || ""
   }
   insecure_opt = "--insecure" if config['redmine']['insecure']
 

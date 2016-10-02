@@ -104,7 +104,7 @@ Then,
 
 ```
 $ togglmine
-## タスク #9772 Task name | blur blur
+## タスク #9772 Task name | blar blar
 curl -vX POST  -H 'Content-Type: application/xml' -H 'X-Redmine-API-Key: 1234567890abcdef1234567890abcdef12345678' https://example.com/time_entries.xml --data '
 <?xml version="1.0" encoding="UTF-8"?>
 <time_entry>
@@ -112,7 +112,7 @@ curl -vX POST  -H 'Content-Type: application/xml' -H 'X-Redmine-API-Key: 1234567
   <activity_id>8</activity_id>
   <spent_on>2016-10-02</spent_on>
   <hours>0.3</hours>
-  <comments>blur blur</comments>
+  <comments>blar blar</comments>
 </time_entry>
 '
 ```
