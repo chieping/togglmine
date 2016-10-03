@@ -88,10 +88,14 @@ $ togglmine 2016-10-01
 ...
 ```
 
-Tip: Open by editor directly (zsh only?):
+Tip: Open by editor directly (Only zsh can use process substitution):
 
 ```
 $ vim =(togglmine)
+
+## or
+
+$ togglmine | vim -
 ```
 
 Tip: Auto detecting into _comments_:
