@@ -44,6 +44,7 @@ toggl_url.query = URI.encode_www_form(
 toggl_data = open(toggl_url, http_basic_authentication: [config['toggl']['apikey'], 'api_token'])
 toggl_data_as_json = JSON.parse(toggl_data.read)
 
+puts config['header'] if config['header']
 toggl_data_as_json['data'].each do |toggl_entry|
   activity_id = resolve_tag_value_to_activity_id(toggl_entry['tags'], config['tag_mapping']) || config['default_activity_id']
   opt = {
@@ -61,4 +62,5 @@ toggl_data_as_json['data'].each do |toggl_entry|
     -H 'X-Redmine-API-Key: #{config['redmine']['authentication']['apikey']}'
     #{URI.join(config['redmine']['url'], '/time_entries.xml')} --data ').join(' ')
   puts build_xml(opt) + "'"
+  puts
 end

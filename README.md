@@ -58,6 +58,11 @@ tag_mapping:
 # default_activity_id: This id is used when "tag_mapping" can not resolve any
 #   tag value to activity id.
 default_activity_id: 14
+# header: This string are printed on the top of the output. Useful if you open
+#  the output by vim directly and want to use
+#  [vim-quickrun](https://github.com/thinca/vim-quickrun) since Vim can guess
+#  filetype and vim-quickrun do properly.
+header: '#!/usr/bin/env bash'
 ```
 
 ## Usage
