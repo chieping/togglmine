@@ -73,6 +73,7 @@ curl -vX POST  -H 'Content-Type: application/xml' -H 'X-Redmine-API-Key: 1234567
 <time_entry>
   <issue_id>8888</issue_id>
   <activity_id>14</activity_id>
+  <activity_name>雑作業</activity_name>
   <spent_on>2016-10-01</spent_on>
   <hours>0.33</hours>
   <comments></comments>
@@ -114,6 +115,7 @@ curl -vX POST  -H 'Content-Type: application/xml' -H 'X-Redmine-API-Key: 1234567
 <time_entry>
   <issue_id>9772</issue_id>
   <activity_id>8</activity_id>
+  <activity_name>雑作業</activity_name>
   <spent_on>2016-10-02</spent_on>
   <hours>0.3</hours>
   <comments>blar blar</comments>

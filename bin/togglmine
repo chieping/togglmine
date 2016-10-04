@@ -45,9 +45,11 @@ toggl_data = open(toggl_url, http_basic_authentication: [config['toggl']['apikey
 toggl_data_as_json = JSON.parse(toggl_data.read)
 
 toggl_data_as_json['data'].each do |toggl_entry|
+  activity_id = resolve_tag_value_to_activity_id(toggl_entry['tags'], config['tag_mapping']) || config['default_activity_id']
   opt = {
     issue_id: toggl_entry['description'][/\d+/] || config['default_issue_id'],
-    activity_id: resolve_tag_value_to_activity_id(toggl_entry['tags'], config['tag_mapping']) || config['default_activity_id'],
+    activity_id: activity_id,
+    activity_name: Hash[config['tag_mapping'].map { |_, v| [v['id'], v['name']] }][activity_id],
     spent_on: target_date,
     hours: convert_msec_to_hour(toggl_entry['dur']),
     comments: toggl_entry['description'][/\|\s*(.*)\z/, 1] || ""
