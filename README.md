@@ -128,6 +128,13 @@ curl -vX POST  -H 'Content-Type: application/xml' -H 'X-Redmine-API-Key: 1234567
 '
 ```
 
+## todos
+
+- Add a sub command to update `default_issue_id`.
+- Add a syntax sugar to abbreviate pipe sign when Redmine ticket doesn't exist in the subject.
+- Add a sub command to generate configuration template.
+- Improve detection of ticket number.
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/chieping/togglmine.
