@@ -47,13 +47,14 @@ toggl_data_as_json = JSON.parse(toggl_data.read)
 puts config['header'] if config['header']
 toggl_data_as_json['data'].each do |toggl_entry|
   activity_id = resolve_tag_value_to_activity_id(toggl_entry['tags'], config['tag_mapping']) || config['default_activity_id']
+  issue_id_in_description = toggl_entry['description'][/(?<=#)\d+/]
   opt = {
-    issue_id: toggl_entry['description'][/#\d+/] || config['default_issue_id'],
+    issue_id: issue_id_in_description || config['default_issue_id'],
     activity_id: activity_id,
     activity_name: Hash[config['tag_mapping'].map { |_, v| [v['id'], v['name']] }][activity_id],
     spent_on: target_date,
     hours: convert_msec_to_hour(toggl_entry['dur']),
-    comments: toggl_entry['description'][/\|\s*(.*)\z/, 1] || ""
+    comments: issue_id_in_description ? (toggl_entry['description'][/\|\s*(.*)\z/, 1] || "") : toggl_entry['description'].gsub(/\A.*\|\s*/, "")
   }
   insecure_opt = "--insecure" if config['redmine']['insecure']
 
