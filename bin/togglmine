@@ -28,6 +28,21 @@ def convert_msec_to_hour(msec)
   (msec.to_f / 1000 / 60 / 60).round(2)
 end
 
+def accumulate(toggl_data)
+  toggl_data.inject([]) do |m, toggl_entry|
+    matched_entry = m.find do |e|
+      e['description'] == toggl_entry['description'] && e['tags'] == toggl_entry['tags']
+    end
+
+    if matched_entry
+      matched_entry['dur'] = matched_entry['dur'].to_i + toggl_entry['dur'].to_i
+    else
+      m << toggl_entry
+    end
+    m
+  end
+end
+
 # main
 target_date = ARGV[0] || Date.today.strftime('%Y-%m-%d')
 unless target_date =~ /\A\d{4}-\d{2}-\d{2}\z/
@@ -45,7 +60,8 @@ toggl_data = open(toggl_url, http_basic_authentication: [config['toggl']['apikey
 toggl_data_as_json = JSON.parse(toggl_data.read)
 
 puts config['header'] if config['header']
-toggl_data_as_json['data'].each do |toggl_entry|
+
+accumulate(toggl_data_as_json['data']).each do |toggl_entry|
   activity_id = resolve_tag_value_to_activity_id(toggl_entry['tags'], config['tag_mapping']) || config['default_activity_id']
   issue_id_in_description = toggl_entry['description'][/(?<=#)\d+/]
   opt = {

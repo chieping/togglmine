@@ -132,7 +132,6 @@ curl -vX POST  -H 'Content-Type: application/xml' -H 'X-Redmine-API-Key: 1234567
 
 - Add a sub command to update `default_issue_id`.
 - Add a sub command to generate configuration template.
-- Summarize entries that have same issu_id/activity/comments in same day
 
 ## Contributing
 
