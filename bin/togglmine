@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-module Togglmine; VERSION = '0.0.4'; end
+module Togglmine; VERSION = '0.0.5'; end
 
 require 'builder'
 require 'yaml'
