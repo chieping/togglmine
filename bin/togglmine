@@ -9,8 +9,6 @@ require 'open-uri'
 require 'time'
 require 'optparse'
 
-config = YAML.load_file("#{ENV['HOME']}/.togglmine.yaml")
-
 def build_xml(opt)
   xml = Builder::XmlMarkup.new(indent: 2)
   xml.instruct! :xml, encoding: "UTF-8"
@@ -58,6 +56,7 @@ def parse_options
   opt.separator 'Options:'
   opt.on('-d', '--update-default-issue-id default_issue_id',
          'Update default_issue_id in togglmine.yaml') { |v| opts['default_issue_id'] = v }
+  opt.on('', '--init-config', 'Create togglmine.yaml') { |v| opts['init'] = v }
   opt.version = ::Togglmine::VERSION
 
   args = opt.parse(ARGV)
@@ -82,14 +81,34 @@ def update_default_issue_id(id)
   end
 end
 
-opt, args = parse_options
+def init_config
+  if File.exists? "#{ENV['HOME']}/.togglmine.yaml"
+    puts '~/.togglmine.yaml already exists.'
+    return
+  end
 
-if opt['default_issue_id']
-  update_default_issue_id(opt['default_issue_id'])
+  init_config = File.read(File.expand_path('../../asset/template_togglmine.yaml', __FILE__))
+
+  open("#{ENV['HOME']}/.togglmine.yaml", 'w') do |f|
+    f.write init_config
+  end
+  puts "Put template file on #{ENV['HOME']}/.togglmine.yaml"
+end
+
+opts, args = parse_options
+
+if opts['default_issue_id']
+  update_default_issue_id(opts['default_issue_id'])
+  exit
+end
+
+if opts['init']
+  init_config
   exit
 end
 
 # main
+config = YAML.load_file("#{ENV['HOME']}/.togglmine.yaml")
 target_date = args[0] || Date.today.strftime('%Y-%m-%d')
 unless target_date =~ /\A\d{4}-\d{2}-\d{2}\z/
   raise "Target date must meet a format: YYYY-MM-DD but: #{target_date}"

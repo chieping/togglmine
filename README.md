@@ -128,10 +128,6 @@ curl -vX POST  -H 'Content-Type: application/xml' -H 'X-Redmine-API-Key: 1234567
 '
 ```
 
-## todos
-
-- Add a sub command to generate configuration template.
-
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/chieping/togglmine.
