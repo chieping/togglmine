@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+module Togglmine; VERSION = '0.0.4'; end
 
 require 'builder'
 require 'yaml'
@@ -6,6 +7,7 @@ require 'json'
 require 'uri'
 require 'open-uri'
 require 'time'
+require 'optparse'
 
 config = YAML.load_file("#{ENV['HOME']}/.togglmine.yaml")
 
@@ -43,8 +45,52 @@ def accumulate(toggl_data)
   end
 end
 
+def parse_options
+  opts = {}
+  opt = OptionParser.new('Usage:', 48)
+  opt.separator '  togglmine [date]'
+  opt.separator '  togglmine [options]'
+  opt.separator ''
+  opt.separator 'date example: 2017-02-10'
+  opt.separator '     default: today'
+  opt.separator ''
+
+  opt.separator 'Options:'
+  opt.on('-d', '--update-default-issue-id default_issue_id',
+         'Update default_issue_id in togglmine.yaml') { |v| opts['default_issue_id'] = v }
+  opt.version = ::Togglmine::VERSION
+
+  args = opt.parse(ARGV)
+  [opts, args]
+end
+
+def update_default_issue_id(id)
+  puts 'trying to update default_issue_id.'
+  config = YAML.load_file("#{ENV['HOME']}/.togglmine.yaml")
+  puts "current: #{config['default_issue_id']}"
+  puts "tobe: #{id}"
+  print 'ok? [y/n]: '
+  ans = STDIN.gets
+  if ans =~ /^[Yy]/
+    row_text = File.read("#{ENV['HOME']}/.togglmine.yaml")
+    open("#{ENV['HOME']}/.togglmine.yaml", 'w') do |f|
+      f.write row_text.gsub(/default_issue_id:.*$/, "default_issue_id: #{id}")
+    end
+    puts 'updated.'
+  else
+    puts 'quit'
+  end
+end
+
+opt, args = parse_options
+
+if opt['default_issue_id']
+  update_default_issue_id(opt['default_issue_id'])
+  exit
+end
+
 # main
-target_date = ARGV[0] || Date.today.strftime('%Y-%m-%d')
+target_date = args[0] || Date.today.strftime('%Y-%m-%d')
 unless target_date =~ /\A\d{4}-\d{2}-\d{2}\z/
   raise "Target date must meet a format: YYYY-MM-DD but: #{target_date}"
 end
