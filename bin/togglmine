@@ -48,7 +48,7 @@ puts config['header'] if config['header']
 toggl_data_as_json['data'].each do |toggl_entry|
   activity_id = resolve_tag_value_to_activity_id(toggl_entry['tags'], config['tag_mapping']) || config['default_activity_id']
   opt = {
-    issue_id: toggl_entry['description'][/\d+/] || config['default_issue_id'],
+    issue_id: toggl_entry['description'][/#\d+/] || config['default_issue_id'],
     activity_id: activity_id,
     activity_name: Hash[config['tag_mapping'].map { |_, v| [v['id'], v['name']] }][activity_id],
     spent_on: target_date,
