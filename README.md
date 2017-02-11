@@ -3,13 +3,13 @@
 This simple tool helps your daily inputs from [Toggl](https://toggl.com) to
 Redmine time\_entry, searching for your working data stored in Toggl and
 printing _curl_ commands in order to store the data on Redmine.  You should
-review printed commands and run it.  You no longer have to input manually by
-Web browser.
+review printed commands and then run it.  You no longer have to input manually
+by Web browser.
 
 ## Installation
 
 ```
-gem install togglmine
+$ gem install togglmine
 ```
 
 ## Configuration
@@ -61,8 +61,14 @@ default_activity_id: 14
 # header: This string are printed on the top of the output. Useful if you open
 #  the output by vim directly and want to use
 #  [vim-quickrun](https://github.com/thinca/vim-quickrun) since Vim can guess
-#  filetype and vim-quickrun do properly.
+#  filetype and vim-quickrun handles properly.
 header: '#!/usr/bin/env bash'
+```
+
+Tip: Put template by command
+
+```
+$ togglmine --init-config
 ```
 
 ## Usage
