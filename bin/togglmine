@@ -95,6 +95,13 @@ def init_config
   puts "Put template file on #{ENV['HOME']}/.togglmine.yaml"
 end
 
+def target_date(arg)
+  return Date.today.strftime('%Y-%m-%d') unless arg
+  return arg if arg =~ /\A\d{4}-\d{2}-\d{2}\z/
+  return (Date.today - arg.to_i).strftime('%Y-%m-%d') if (1..31).cover? arg.to_i
+  raise "You can pass a parameter either YYYY-MM-DD format or integer less than or equal to 31 but: #{arg}"
+end
+
 opts, args = parse_options
 
 if opts['default_issue_id']
@@ -109,10 +116,7 @@ end
 
 # main
 config = YAML.load_file("#{ENV['HOME']}/.togglmine.yaml")
-target_date = args[0] || Date.today.strftime('%Y-%m-%d')
-unless target_date =~ /\A\d{4}-\d{2}-\d{2}\z/
-  raise "Target date must meet a format: YYYY-MM-DD but: #{target_date}"
-end
+target_date = target_date(args[0])
 
 toggl_url = URI.parse 'https://toggl.com/reports/api/v2/details'
 toggl_url.query = URI.encode_www_form(
