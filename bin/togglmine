@@ -49,8 +49,9 @@ def parse_options
   opt.separator '  togglmine [date]'
   opt.separator '  togglmine [options]'
   opt.separator ''
-  opt.separator 'date example: 2017-02-10'
-  opt.separator '     default: today'
+  opt.separator 'date examples:'
+  opt.separator '         - 2017-02-10'
+  opt.separator '         - 1           => means yesterday'
   opt.separator ''
 
   opt.separator 'Options:'
