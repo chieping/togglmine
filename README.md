@@ -6,6 +6,11 @@ printing _curl_ commands in order to store the data on Redmine.  You should
 review printed commands and then run it.  You no longer have to input manually
 by Web browser.
 
+## Context
+
+- You are supposed to input your work time to Redmine
+- You want to manage work time you spent
+
 ## Installation
 
 ```
