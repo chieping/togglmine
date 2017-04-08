@@ -87,12 +87,8 @@ def init_config
     puts '~/.togglmine.yaml already exists.'
     return
   end
-
-  init_config = File.read(File.expand_path('../../asset/template_togglmine.yaml', __FILE__))
-
-  open("#{ENV['HOME']}/.togglmine.yaml", 'w') do |f|
-    f.write init_config
-  end
+  require 'fileutils'
+  FileUtils.cp(File.expand_path('../../asset/template_togglmine.yaml', __FILE__), "#{ENV['HOME']}/.togglmine.yaml")
   puts "Put template file on #{ENV['HOME']}/.togglmine.yaml"
 end
 
